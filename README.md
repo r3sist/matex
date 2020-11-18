@@ -2,6 +2,15 @@
 
 PHP Mathematical expression parser and evaluator
 
+## Changelog
+
+Original credits: https://github.com/madorin/matex 
+
+Changes:
+
++ Reformat code
++ composer support
+
 ## Features
 
 * Fast evaluation
