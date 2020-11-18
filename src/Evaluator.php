@@ -72,7 +72,7 @@ class Evaluator
             elseif ($char === '(') $b++;
             $this->pos++;
         }
-        if (!in_array($char, [false, '+', '-', '/', '*', '^', ')']))
+        if (!in_array($char, [false, '+', '-', '/', '*', '^', ')'], true))
             return false;
         $this->addArgument($arguments, substr($this->text, $mark, $this->pos - $mark - 1));
         return true;
@@ -112,7 +112,7 @@ class Evaluator
             $this->pos++;
             $value = $this->calculate();
             $this->pos++;
-            if (!in_array($this->text[$this->pos] ?? false, [false, '+', '-', '/', '*', '^', ')']))
+            if (!in_array($this->text[$this->pos] ?? false, [false, '+', '-', '/', '*', '^', ')'], true))
                 throw new MatexException('Syntax error', 1);
             return $value;
         }
