@@ -1,6 +1,6 @@
 <?php
 
-namespace Matex;
+namespace resist\Matex;
 
 class Exception extends \Exception
 {
