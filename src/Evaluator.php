@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace resist\Matex;
 
@@ -20,14 +20,14 @@ class Evaluator
     private function getIdentity(bool &$kind = null, string &$value = null): bool
     {
         $ops = $this->pos;
-        $ist = ($this->text[$this->pos] ?? false) == '"';
+        $ist = ($this->text[$this->pos] ?? false) === '"';
         if ($ist) $this->pos++;
-        while ((($char = $this->text[$this->pos] ?? false) !== false) && (($ist && ($char != '"')) || ctype_alnum($char) || in_array($char, ['_', '.'])))
+        while ((($char = $this->text[$this->pos] ?? false) !== false) && (($ist && ($char !== '"')) || ctype_alnum($char) || in_array($char, ['_', '.'])))
             $this->pos++;
         if (!$len = $this->pos - $ops) return false;
         $str = substr($this->text, $ops, $len);
         if ($ist) {
-            if ($char != '"') return false;
+            if ($char !== '"') return false;
             $this->pos++;
             $value = substr($str, 1);
             $kind = 4;
@@ -36,7 +36,7 @@ class Evaluator
         if (is_numeric($str)) $kind = 1;
         else {
             if (ctype_digit($str[0]) || (strpos($str, '.') !== false)) return false;
-            $kind = $char == '(' ? 3 : 2;
+            $kind = $char === '(' ? 3 : 2;
         }
         $value = $str;
         return true;
@@ -56,7 +56,7 @@ class Evaluator
 
     private function addArgument(&$arguments, $argument)
     {
-        if ($argument == '')
+        if ($argument === '')
             throw new Exception('Empty argument', 4);
         $arguments[] = $argument;
     }
@@ -67,11 +67,11 @@ class Evaluator
         $this->pos++;
         $mark = $this->pos;
         while ((($char = $this->text[$this->pos] ?? false) !== false) && ($b > 0)) {
-            if (($char == ',') && ($b == 1)) {
+            if (($char === ',') && ($b === 1)) {
                 $this->addArgument($arguments, substr($this->text, $mark, $this->pos - $mark));
                 $mark = $this->pos + 1;
-            } elseif ($char == ')') $b--;
-            elseif ($char == '(') $b++;
+            } elseif ($char === ')') $b--;
+            elseif ($char === '(') $b++;
             $this->pos++;
         }
         if (!in_array($char, [false, '+', '-', '/', '*', '^', ')']))
@@ -103,14 +103,14 @@ class Evaluator
             throw new Exception('Unknown function: ' . $name, 6);
         if (!$this->getArguments($arguments))
             throw new Exception('Syntax error', 1);
-        if (isset($routine['arc']) && ($routine['arc'] != count($arguments)))
+        if (isset($routine['arc']) && ($routine['arc'] !== count($arguments)))
             throw new Exception('Invalid argument count', 3);
         return call_user_func_array($routine['ref'], $this->proArguments($arguments));
     }
 
     private function term()
     {
-        if ($this->text[$this->pos] == '(') {
+        if ($this->text[$this->pos] === '(') {
             $this->pos++;
             $value = $this->calculate();
             $this->pos++;
@@ -143,7 +143,7 @@ class Evaluator
                     $value = $value * $term;
                     break;
                 case '/':
-                    if ($term == 0)
+                    if ($term == 0) // TODO Check this ===
                         throw new Exception('Division by zero', 7);
                     $value = $value / $term;
                     break;
@@ -161,11 +161,11 @@ class Evaluator
         while (in_array($char = $this->text[$this->pos] ?? false, ['+', '-'])) {
             $this->pos++;
             $subTerm = $this->subTerm();
-            if (($char == '+') && is_string($value)) {
+            if (($char === '+') && is_string($value)) {
                 $value .= $subTerm;
                 continue;
             }
-            if ($char == '-') $subTerm = -$subTerm;
+            if ($char === '-') $subTerm = -$subTerm;
             $value += $subTerm;
         }
         return $value;
@@ -193,7 +193,7 @@ class Evaluator
                     break;
             }
         }
-        if ($b != 0)
+        if ($b !== 0)
             throw new Exception('Unmatched brackets', 2);
         $i = strpos($formula, '"');
         if ($i === false)
@@ -213,7 +213,7 @@ class Evaluator
                 $d = $s + 1;
                 if ($l < $d) break;
             } while (($i = strpos($formula, '"', $d)) !== false);
-            if ($l != $s)
+            if ($l !== $s)
                 $cleaned .= str_replace(' ', '', strtolower(substr($formula, $s)));
             $formula = $cleaned;
         }
