@@ -1,7 +1,9 @@
 # Matex
+
 PHP Mathematical expression parser and evaluator
 
 ## Features
+
 * Fast evaluation
 * Compact codebase
 * Operators: + - * / ^
@@ -14,18 +16,21 @@ PHP Mathematical expression parser and evaluator
 ## Examples
 
 Basic:
+
 ```php
 $evaluator = new \Matex\Evaluator();
 echo $evaluator->execute('1 + 2');
 ```
 
 String concatenation:
+
 ```php
 $evaluator = new \Matex\Evaluator();
 echo $evaluator->execute('"String" + " " + "concatenation"');
 ```
 
 Variables:
+
 ```php
 $evaluator = new \Matex\Evaluator();
 $evaluator->variables = [
@@ -36,6 +41,7 @@ echo $evaluator->execute('a + b');
 ```
 
 Dynamic variables:
+
 ```php
 public function doVariable($name, &$value) {
     switch ($name) {
@@ -54,6 +60,7 @@ echo $evaluator->execute('a + b');
 ```
 
 Functions:
+
 ```php
 static function sum($arguments) {
     $result = 0;
@@ -70,6 +77,7 @@ echo $evaluator->execute('sum(1, 2, 3)');
 ```
 
 Extravaganza:
+
 ```php
 /*
 Dynamic variable resolver
