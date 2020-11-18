@@ -11,6 +11,7 @@ Changes:
 + Reformat code
 + composer support
 + Add unit tests
++ Add custom exception
 
 ## Features
 
