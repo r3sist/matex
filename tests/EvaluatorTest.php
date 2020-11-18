@@ -37,6 +37,10 @@ final class EvaluatorTest extends TestCase
             [' 1-1 ', 0],
             ['1 + 2 - 3 * 2 / 2', 0],
             ['6 / (1 + 2)', 2],
+            [' 0', 0],
+            ['.1', 0.1],
+            ['-1', -1],
+            ['-1-10', -11],
         ];
     }
 
@@ -101,7 +105,7 @@ final class EvaluatorTest extends TestCase
                 break;
         }
     }
-    
+
     // TODO test 'Extravaganza'
 
     /**
@@ -112,16 +116,24 @@ final class EvaluatorTest extends TestCase
     {
         $evaluator = new Evaluator();
         $evaluator->functions = [
-            'sum' => ['ref' => 'EvaluatorTest::sum', 'arc' => null]
+            'sum' => ['ref' => 'EvaluatorTest::sum', 'arc' => null],
+            'min' => ['ref' => 'min', 'arc' => null],
         ];
         self::assertEquals(
-            6,
-            $evaluator->execute('sum(1, 2, 3)')
+            5,
+            $evaluator->execute('sum(1, 2, 3) + min(0, -1, 4)')
         );
     }
 
     public static function sum(...$arguments) {
         return array_sum($arguments);
+    }
+
+    public function testExceptions(): void
+    {
+        $evaluator = new Evaluator();
+        $this->expectException(\resist\Matex\Exception::class);
+        $evaluator->execute('1/0');
     }
 
 }
