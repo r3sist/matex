@@ -186,7 +186,7 @@ class Evaluator
     public function execute(string $formula)
     {
         $b = 0;
-        for ($i = 0; $i < \strlen($formula); $i++) {
+        for ($i = 0, $iMax = strlen($formula); $i < $iMax; $i++) {
             switch ($formula[$i]) {
                 case '(':
                     $b++;
