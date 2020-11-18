@@ -101,8 +101,27 @@ final class EvaluatorTest extends TestCase
                 break;
         }
     }
-
-    // TODO test functions
+    
     // TODO test 'Extravaganza'
+
+    /**
+     * Example from original documentation #5
+     * @throws \resist\Matex\Exception
+     */
+    public function testFunctions(): void
+    {
+        $evaluator = new Evaluator();
+        $evaluator->functions = [
+            'sum' => ['ref' => 'EvaluatorTest::sum', 'arc' => null]
+        ];
+        self::assertEquals(
+            6,
+            $evaluator->execute('sum(1, 2, 3)')
+        );
+    }
+
+    public static function sum(...$arguments) {
+        return array_sum($arguments);
+    }
 
 }

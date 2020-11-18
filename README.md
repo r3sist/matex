@@ -10,6 +10,7 @@ Changes:
 
 + Reformat code
 + composer support
++ Add unit tests
 
 ## Features
 
@@ -71,7 +72,7 @@ echo $evaluator->execute('a + b');
 Functions:
 
 ```php
-static function sum($arguments) {
+static function sum(...$arguments) {
     $result = 0;
     foreach ($arguments as $argument)
         $result += $argument;
