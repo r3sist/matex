@@ -2,9 +2,7 @@
 
 namespace resist\Matex;
 
-class Exception extends \Exception
-{
-}
+use resist\Matex\Exception\MatexException;
 
 class Evaluator
 {
@@ -50,14 +48,14 @@ class Evaluator
             $this->variables[$name] = $value;
         }
         if (!isset($value))
-            throw new Exception('Unknown variable: ' . $name, 5);
+            throw new MatexException('Unknown variable: ' . $name, 5);
         return $value;
     }
 
     private function addArgument(&$arguments, $argument)
     {
         if ($argument === '')
-            throw new Exception('Empty argument', 4);
+            throw new MatexException('Empty argument', 4);
         $arguments[] = $argument;
     }
 
@@ -100,11 +98,11 @@ class Evaluator
             $this->functions[$name] = $routine;
         }
         if (!isset($routine))
-            throw new Exception('Unknown function: ' . $name, 6);
+            throw new MatexException('Unknown function: ' . $name, 6);
         if (!$this->getArguments($arguments))
-            throw new Exception('Syntax error', 1);
+            throw new MatexException('Syntax error', 1);
         if (isset($routine['arc']) && ($routine['arc'] !== count($arguments)))
-            throw new Exception('Invalid argument count', 3);
+            throw new MatexException('Invalid argument count', 3);
         return call_user_func_array($routine['ref'], $this->proArguments($arguments));
     }
 
@@ -115,11 +113,11 @@ class Evaluator
             $value = $this->calculate();
             $this->pos++;
             if (!in_array($this->text[$this->pos] ?? false, [false, '+', '-', '/', '*', '^', ')']))
-                throw new Exception('Syntax error', 1);
+                throw new MatexException('Syntax error', 1);
             return $value;
         }
         if (!$this->getIdentity($kind, $name))
-            throw new Exception('Syntax error', 1);
+            throw new MatexException('Syntax error', 1);
         switch ($kind) {
             case 1:
                 return (float)$name;
@@ -144,7 +142,7 @@ class Evaluator
                     break;
                 case '/':
                     if ($term == 0) // TODO Check this ===
-                        throw new Exception('Division by zero', 7);
+                        throw new MatexException('Division by zero', 7);
                     $value = $value / $term;
                     break;
                 case '^':
@@ -194,7 +192,7 @@ class Evaluator
             }
         }
         if ($b !== 0)
-            throw new Exception('Unmatched brackets', 2);
+            throw new MatexException('Unmatched brackets', 2);
         $i = strpos($formula, '"');
         if ($i === false)
             $formula = str_replace(' ', '', strtolower($formula));

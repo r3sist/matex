@@ -7,13 +7,14 @@ require(__DIR__.'/../vendor/autoload.php');
 
 use PHPUnit\Framework\TestCase;
 use resist\Matex\Evaluator;
+use resist\Matex\Exception\MatexException;
 
 final class EvaluatorTest extends TestCase
 {
 
     /**
      * @dataProvider getExpressions
-     * @throws \resist\Matex\Exception
+     * @throws MatexException
      */
     public function testExpressions(string $expression, float $expected): void
     {
@@ -46,7 +47,7 @@ final class EvaluatorTest extends TestCase
 
     /**
      * Example from original documentation #2
-     * @throws \resist\Matex\Exception
+     * @throws MatexException
      */
     public function testConcatenation(): void
     {
@@ -59,7 +60,7 @@ final class EvaluatorTest extends TestCase
 
     /**
      * @dataProvider getExpressionsWithVariables
-     * @throws \resist\Matex\Exception
+     * @throws MatexException
      */
     public function testVariables(string $expression, array $variables, float $expected): void
     {
@@ -81,7 +82,7 @@ final class EvaluatorTest extends TestCase
 
     /**
      * Example from original documentation #4
-     * @throws \resist\Matex\Exception
+     * @throws MatexException
      */
     public function testDynamicVariables(): void
     {
@@ -106,11 +107,9 @@ final class EvaluatorTest extends TestCase
         }
     }
 
-    // TODO test 'Extravaganza'
-
     /**
      * Example from original documentation #5
-     * @throws \resist\Matex\Exception
+     * @throws MatexException
      */
     public function testFunctions(): void
     {
@@ -132,7 +131,7 @@ final class EvaluatorTest extends TestCase
     public function testExceptions(): void
     {
         $evaluator = new Evaluator();
-        $this->expectException(\resist\Matex\Exception::class);
+        $this->expectException(MatexException::class);
         $evaluator->execute('1/0');
     }
 
