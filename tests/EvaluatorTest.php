@@ -27,6 +27,7 @@ final class EvaluatorTest extends TestCase
     public function getExpressions(): array
     {
         return [
+            ['1 + 2', 3], // Example from original documentation #1
             ['1 + 1', 2],
             ['1 + 0.11', 1.11],
             ['2*2', 4],
@@ -37,6 +38,19 @@ final class EvaluatorTest extends TestCase
             ['1 + 2 - 3 * 2 / 2', 0],
             ['6 / (1 + 2)', 2],
         ];
+    }
+
+    /**
+     * Example from original documentation #2
+     * @throws \resist\Matex\Exception
+     */
+    public function testConcatenation(): void
+    {
+        $evaluator = new Evaluator();
+        self::assertEquals(
+            'String concatenation',
+            $evaluator->execute('"String" + " " + "concatenation"')
+        );
     }
 
     /**
@@ -56,8 +70,39 @@ final class EvaluatorTest extends TestCase
     public function getExpressionsWithVariables(): array
     {
         return [
-            ['x+y', ['x' => 1, 'y' => 2], 3],
+            ['x+y', ['x' => 1, 'y' => 2], 3], // Example from original documentation #3
             ['x+1', ['x' => 1], 2],
         ];
     }
+
+    /**
+     * Example from original documentation #4
+     * @throws \resist\Matex\Exception
+     */
+    public function testDynamicVariables(): void
+    {
+        $evaluator = new Evaluator();
+        $evaluator->variables = ['a' => 1];
+        $evaluator->onVariable = [$this, 'doVariable'];
+        self::assertEquals(
+            5,
+            $evaluator->execute('a+b')
+        );
+    }
+
+    /**
+     * Example from original documentation #4 - helper function
+     */
+    public function doVariable($name, &$value): void
+    {
+        switch ($name) {
+            case 'b':
+                $value = 4;
+                break;
+        }
+    }
+
+    // TODO test functions
+    // TODO test 'Extravaganza'
+
 }
