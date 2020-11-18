@@ -20,7 +20,7 @@ class Evaluator
         $ops = $this->pos;
         $ist = ($this->text[$this->pos] ?? false) === '"';
         if ($ist) $this->pos++;
-        while ((($char = $this->text[$this->pos] ?? false) !== false) && (($ist && ($char !== '"')) || ctype_alnum($char) || in_array($char, ['_', '.'])))
+        while ((($char = $this->text[$this->pos] ?? false) !== false) && (($ist && ($char !== '"')) || ctype_alnum($char) || \in_array($char, ['_', '.'])))
             $this->pos++;
         if (!$len = $this->pos - $ops) return false;
         $str = substr($this->text, $ops, $len);
@@ -44,7 +44,7 @@ class Evaluator
     {
         $value = $this->variables[$name] ?? null;
         if (!isset($value) && isset($this->onVariable)) {
-            call_user_func_array($this->onVariable, [$name, &$value]);
+            \call_user_func_array($this->onVariable, [$name, &$value]);
             $this->variables[$name] = $value;
         }
         if (!isset($value))
@@ -72,7 +72,7 @@ class Evaluator
             elseif ($char === '(') $b++;
             $this->pos++;
         }
-        if (!in_array($char, [false, '+', '-', '/', '*', '^', ')'], true))
+        if (!\in_array($char, [false, '+', '-', '/', '*', '^', ')'], true))
             return false;
         $this->addArgument($arguments, substr($this->text, $mark, $this->pos - $mark - 1));
         return true;
@@ -94,16 +94,16 @@ class Evaluator
     {
         $routine = $this->functions[$name] ?? null;
         if (!isset($routine) && isset($this->onFunction)) {
-            call_user_func_array($this->onFunction, [$name, &$routine]);
+            \call_user_func_array($this->onFunction, [$name, &$routine]);
             $this->functions[$name] = $routine;
         }
         if (!isset($routine))
             throw new MatexException('Unknown function: ' . $name, 6);
         if (!$this->getArguments($arguments))
             throw new MatexException('Syntax error', 1);
-        if (isset($routine['arc']) && ($routine['arc'] !== count($arguments)))
+        if (isset($routine['arc']) && ($routine['arc'] !== \count($arguments)))
             throw new MatexException('Invalid argument count', 3);
-        return call_user_func_array($routine['ref'], $this->proArguments($arguments));
+        return \call_user_func_array($routine['ref'], $this->proArguments($arguments));
     }
 
     private function term()
@@ -112,7 +112,7 @@ class Evaluator
             $this->pos++;
             $value = $this->calculate();
             $this->pos++;
-            if (!in_array($this->text[$this->pos] ?? false, [false, '+', '-', '/', '*', '^', ')'], true))
+            if (!\in_array($this->text[$this->pos] ?? false, [false, '+', '-', '/', '*', '^', ')'], true))
                 throw new MatexException('Syntax error', 1);
             return $value;
         }
@@ -133,7 +133,7 @@ class Evaluator
     private function subTerm()
     {
         $value = $this->term();
-        while (in_array($char = $this->text[$this->pos] ?? false, ['*', '^', '/'])) {
+        while (\in_array($char = $this->text[$this->pos] ?? false, ['*', '^', '/'])) {
             $this->pos++;
             $term = $this->term();
             switch ($char) {
@@ -156,10 +156,10 @@ class Evaluator
     private function calculate()
     {
         $value = $this->subTerm();
-        while (in_array($char = $this->text[$this->pos] ?? false, ['+', '-'])) {
+        while (\in_array($char = $this->text[$this->pos] ?? false, ['+', '-'])) {
             $this->pos++;
             $subTerm = $this->subTerm();
-            if (($char === '+') && is_string($value)) {
+            if (($char === '+') && \is_string($value)) {
                 $value .= $subTerm;
                 continue;
             }
@@ -172,7 +172,7 @@ class Evaluator
     private function perform(string $formula)
     {
         $this->pos = 0;
-        if (in_array($formula[0], ['-', '+']))
+        if (\in_array($formula[0], ['-', '+']))
             $formula = '0' . $formula;
         $this->text = $formula;
         return $this->calculate();
@@ -181,7 +181,7 @@ class Evaluator
     public function execute(string $formula)
     {
         $b = 0;
-        for ($i = 0; $i < strlen($formula); $i++) {
+        for ($i = 0; $i < \strlen($formula); $i++) {
             switch ($formula[$i]) {
                 case '(':
                     $b++;
@@ -198,7 +198,7 @@ class Evaluator
             $formula = str_replace(' ', '', strtolower($formula));
         else {
             $cleaned = '';
-            $l = strlen($formula);
+            $l = \strlen($formula);
             $s = 0;
             $b = false;
             do {
