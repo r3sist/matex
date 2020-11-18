@@ -138,12 +138,12 @@ class Evaluator
             $term = $this->term();
             switch ($char) {
                 case '*':
-                    $value = $value * $term;
+                    $value *= $term;
                     break;
                 case '/':
                     if ($term == 0) // TODO Check this ===
                         throw new MatexException('Division by zero', 7);
-                    $value = $value / $term;
+                    $value /= $term;
                     break;
                 case '^':
                     $value = pow($value, $term);
