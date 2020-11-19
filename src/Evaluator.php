@@ -56,6 +56,9 @@ class Evaluator
         return true;
     }
 
+    /**
+     * @throws MatexException
+     */
     private function getVariable(string $name): float
     {
         $value = $this->variables[$name] ?? null;
@@ -69,6 +72,9 @@ class Evaluator
         return $value;
     }
 
+    /**
+     * @throws MatexException
+     */
     private function addArgument(&$arguments, $argument)
     {
         if ($argument === '') {
@@ -77,6 +83,9 @@ class Evaluator
         $arguments[] = $argument;
     }
 
+    /**
+     * @throws MatexException
+     */
     private function getArguments(&$arguments = []): bool
     {
         $b = 1;
@@ -101,6 +110,9 @@ class Evaluator
         return true;
     }
 
+    /**
+     * @throws MatexException
+     */
     private function proArguments($arguments)
     {
         $ops = $this->pos;
@@ -114,6 +126,9 @@ class Evaluator
         return $result;
     }
 
+    /**
+     * @throws MatexException
+     */
     private function getFunction(string $name)
     {
         $routine = $this->functions[$name] ?? null;
@@ -133,6 +148,10 @@ class Evaluator
         return call_user_func_array($routine['ref'], $this->proArguments($arguments));
     }
 
+    /**
+     * @return false|float|int|mixed|string
+     * @throws MatexException
+     */
     private function term()
     {
         if ($this->text[$this->pos] === '(') {
@@ -159,6 +178,10 @@ class Evaluator
         }
     }
 
+    /**
+     * @return false|float|int|mixed|string
+     * @throws MatexException
+     */
     private function subTerm()
     {
         $value = $this->term();
@@ -184,6 +207,10 @@ class Evaluator
         return $value;
     }
 
+    /**
+     * @return false|float|int|mixed|string
+     * @throws MatexException
+     */
     private function calculate()
     {
         $value = $this->subTerm();
@@ -202,6 +229,10 @@ class Evaluator
         return $value;
     }
 
+    /**
+     * @return false|float|int|mixed|string
+     * @throws MatexException
+     */
     private function perform(string $formula)
     {
         $this->pos = 0;
@@ -212,6 +243,11 @@ class Evaluator
         return $this->calculate();
     }
 
+    /**
+     * @param string $formula
+     * @return false|float|int|mixed|string
+     * @throws MatexException
+     */
     public function execute(string $formula)
     {
         $b = 0;
