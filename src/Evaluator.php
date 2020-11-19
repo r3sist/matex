@@ -24,21 +24,32 @@ class Evaluator
     {
         $ops = $this->pos;
         $ist = ($this->text[$this->pos] ?? false) === '"';
-        if ($ist) $this->pos++;
-        while ((($char = $this->text[$this->pos] ?? false) !== false) && (($ist && ($char !== '"')) || ctype_alnum($char) || in_array($char, ['_', '.'])))
+        if ($ist) {
             $this->pos++;
-        if (!$len = $this->pos - $ops) return false;
+        }
+        while ((($char = $this->text[$this->pos] ?? false) !== false) && (($ist && ($char !== '"')) || ctype_alnum($char) || in_array($char, ['_', '.']))) {
+            $this->pos++;
+        }
+        if (!$len = $this->pos - $ops) {
+            return false;
+        }
         $str = substr($this->text, $ops, $len);
         if ($ist) {
-            if ($char !== '"') return false;
+            if ($char !== '"') {
+                return false;
+            }
             $this->pos++;
             $value = substr($str, 1);
             $kind = 4;
             return true;
         }
-        if (is_numeric($str)) $kind = 1;
+        if (is_numeric($str)) {
+            $kind = 1;
+        }
         else {
-            if (ctype_digit($str[0]) || (strpos($str, '.') !== false)) return false;
+            if (ctype_digit($str[0]) || (strpos($str, '.') !== false)) {
+                return false;
+            }
             $kind = $char === '(' ? 3 : 2;
         }
         $value = $str;
@@ -52,15 +63,17 @@ class Evaluator
             call_user_func_array($this->onVariable, [$name, &$value]);
             $this->variables[$name] = $value;
         }
-        if (!isset($value))
+        if (!isset($value)) {
             throw new MatexException('Unknown variable: ' . $name, 5);
+        }
         return $value;
     }
 
     private function addArgument(&$arguments, $argument)
     {
-        if ($argument === '')
+        if ($argument === '') {
             throw new MatexException('Empty argument', 4);
+        }
         $arguments[] = $argument;
     }
 
@@ -73,12 +86,17 @@ class Evaluator
             if (($char === ',') && ($b === 1)) {
                 $this->addArgument($arguments, substr($this->text, $mark, $this->pos - $mark));
                 $mark = $this->pos + 1;
-            } elseif ($char === ')') $b--;
-            elseif ($char === '(') $b++;
+            } elseif ($char === ')') {
+                $b--;
+            }
+            elseif ($char === '(') {
+                $b++;
+            }
             $this->pos++;
         }
-        if (!in_array($char, [false, '+', '-', '/', '*', '^', ')'], true))
+        if (!in_array($char, [false, '+', '-', '/', '*', '^', ')'], true)) {
             return false;
+        }
         $this->addArgument($arguments, substr($this->text, $mark, $this->pos - $mark - 1));
         return true;
     }
@@ -88,8 +106,9 @@ class Evaluator
         $ops = $this->pos;
         $otx = $this->text;
         $result = [];
-        foreach ($arguments as $argument)
+        foreach ($arguments as $argument) {
             $result[] = $this->perform($argument);
+        }
         $this->pos = $ops;
         $this->text = $otx;
         return $result;
@@ -102,12 +121,15 @@ class Evaluator
             call_user_func_array($this->onFunction, [$name, &$routine]);
             $this->functions[$name] = $routine;
         }
-        if (!isset($routine))
+        if (!isset($routine)) {
             throw new MatexException('Unknown function: ' . $name, 6);
-        if (!$this->getArguments($arguments))
+        }
+        if (!$this->getArguments($arguments)) {
             throw new MatexException('Syntax error', 1);
-        if (isset($routine['arc']) && ($routine['arc'] !== count($arguments)))
+        }
+        if (isset($routine['arc']) && ($routine['arc'] !== count($arguments))) {
             throw new MatexException('Invalid argument count', 3);
+        }
         return call_user_func_array($routine['ref'], $this->proArguments($arguments));
     }
 
@@ -117,12 +139,14 @@ class Evaluator
             $this->pos++;
             $value = $this->calculate();
             $this->pos++;
-            if (!in_array($this->text[$this->pos] ?? false, [false, '+', '-', '/', '*', '^', ')'], true))
+            if (!in_array($this->text[$this->pos] ?? false, [false, '+', '-', '/', '*', '^', ')'], true)) {
                 throw new MatexException('Syntax error', 1);
+            }
             return $value;
         }
-        if (!$this->getIdentity($kind, $name))
+        if (!$this->getIdentity($kind, $name)) {
             throw new MatexException('Syntax error', 1);
+        }
         switch ($kind) {
             case 1:
                 return (float)$name;
@@ -147,7 +171,9 @@ class Evaluator
                     break;
                 case '/':
                     if ($term == 0) // TODO Check this ===
+                    {
                         throw new MatexException('Division by zero', 7);
+                    }
                     $value /= $term;
                     break;
                 case '^':
@@ -168,7 +194,9 @@ class Evaluator
                 $value .= $subTerm;
                 continue;
             }
-            if ($char === '-') $subTerm = -$subTerm;
+            if ($char === '-') {
+                $subTerm = -$subTerm;
+            }
             $value += $subTerm;
         }
         return $value;
@@ -177,8 +205,9 @@ class Evaluator
     private function perform(string $formula)
     {
         $this->pos = 0;
-        if (in_array($formula[0], ['-', '+']))
+        if (in_array($formula[0], ['-', '+'])) {
             $formula = '0' . $formula;
+        }
         $this->text = $formula;
         return $this->calculate();
     }
@@ -196,28 +225,37 @@ class Evaluator
                     break;
             }
         }
-        if ($b !== 0)
+        if ($b !== 0) {
             throw new MatexException('Unmatched brackets', 2);
+        }
         $i = strpos($formula, '"');
-        if ($i === false)
+        if ($i === false) {
             $formula = str_replace(' ', '', strtolower($formula));
+        }
         else {
             $cleaned = '';
             $l = strlen($formula);
             $s = 0;
             $b = false;
             do {
-                if ($b) $i++;
+                if ($b) {
+                    $i++;
+                }
                 $part = substr($formula, $s, $i - $s);
-                if (!$b) $part = str_replace(' ', '', strtolower($part));
+                if (!$b) {
+                    $part = str_replace(' ', '', strtolower($part));
+                }
                 $s = $i;
                 $b = !$b;
                 $cleaned .= $part;
                 $d = $s + 1;
-                if ($l < $d) break;
+                if ($l < $d) {
+                    break;
+                }
             } while (($i = strpos($formula, '"', $d)) !== false);
-            if ($l !== $s)
+            if ($l !== $s) {
                 $cleaned .= str_replace(' ', '', strtolower(substr($formula, $s)));
+            }
             $formula = $cleaned;
         }
         return $this->perform($formula);
