@@ -1,4 +1,11 @@
 <?php declare(strict_types=1);
+/**
+ * PHP Mathematical expression parser and evaluator
+ * https://github.com/r3sist/matex 
+ *
+ * Original credits: https://github.com/madorin/matex
+ * Negative number support: https://github.com/blazer82/matex/
+ */
 
 namespace resist\Matex;
 
@@ -239,9 +246,13 @@ class Evaluator
     private function perform(string $formula)
     {
         $this->pos = 0;
-        if (in_array($formula[0], ['-', '+'])) {
-            $formula = '0' . $formula;
-        }
+
+        // https://github.com/blazer82/matex/commit/e3f95018e51e106e5730e1e1163ad5538ea9e3e3
+        // https://github.com/blazer82/matex/commit/cdea218077f468ac25868b68a9fb7aea1cdf61d5
+        // https://github.com/blazer82/matex/commit/79d49a4e42ebba4a6f589c0e343d56678ce357bd
+        $formula = preg_replace('/^([+\-])([0-9a-z]+)(.*)/i', '(0$1$2)$3', $formula); // Replace -# with (0-#) at the beginning
+        $formula = preg_replace('/(.*[+\-*\/^(])([+\-])([0-9a-z]+)(.*)/i', '${1}(0$2$3)$4', $formula); // Replace all other occurences of -# with (0-#)
+
         $this->text = $formula;
         return $this->calculate();
     }

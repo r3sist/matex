@@ -42,6 +42,7 @@ final class EvaluatorTest extends TestCase
             ['.1', 0.1],
             ['-1', -1],
             ['-1-10', -11],
+            ['-2 + 2 * -125 / 5', -52],
         ];
     }
 

@@ -8,10 +8,12 @@ Original credits: https://github.com/madorin/matex
 
 Changes:
 
++ Bump required PHP version to 7.4
 + Reformat code
 + composer support
 + Add unit tests
 + Add custom exception
++ Add proper negative number support: thanks to https://github.com/blazer82/matex/ 
 
 ## Features
 
