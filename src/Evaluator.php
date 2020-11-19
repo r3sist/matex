@@ -203,7 +203,7 @@ class Evaluator
                     $value /= $term;
                     break;
                 case '^':
-                    $value = pow($value, $term);
+                    $value = $value ** $term;
                     break;
             }
         }
