@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 /**
+ * PHP Mathematical expression parser and evaluator
+ * https://github.com/r3sist/matex
+ *
+ * Original credits: https://github.com/madorin/matex
+ *
  * Tested with phpunit-9.4.3.phar & PHP 7.4
  */
 

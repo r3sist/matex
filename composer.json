@@ -3,6 +3,7 @@
   "description": "PHP Mathematical expression parser and evaluator",
   "homepage": "https://github.com/r3sist/matex",
   "license": "MIT",
+  "type": "library",
   "require": {
     "php": ">=7.4"
   },

@@ -2,18 +2,28 @@
 
 PHP Mathematical expression parser and evaluator
 
+---
+
+## Installation
+
+`composer require resist/matex`
+
 ## Changelog
 
 Original credits: https://github.com/madorin/matex 
 
 Changes:
 
-+ Bump required PHP version to 7.4
-+ Reformat code
-+ composer support
-+ Add unit tests
-+ Add custom exception
-+ Add proper negative number support: thanks to https://github.com/blazer82/matex/ 
++ Added Composer and [Packagist](https://packagist.org/packages/resist/matex) support
++ Added proper negative number support: thanks to https://github.com/blazer82/matex/
++ Added custom `MatexException`
++ Bumped required PHP version to 7.4
++ Added unit tests
++ Reformatted code
+
+Original README below:
+
+---
 
 ## Features
 
