@@ -113,16 +113,19 @@ class Evaluator
     /**
      * @throws MatexException
      */
-    private function proArguments($arguments)
+    private function proArguments($arguments): array
     {
         $ops = $this->pos;
         $otx = $this->text;
         $result = [];
+
         foreach ($arguments as $argument) {
             $result[] = $this->perform($argument);
         }
+
         $this->pos = $ops;
         $this->text = $otx;
+
         return $result;
     }
 
