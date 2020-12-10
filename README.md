@@ -15,6 +15,7 @@ Original credits: https://github.com/madorin/matex
 Changes:
 
 + Added Composer and [Packagist](https://packagist.org/packages/resist/matex) support
++ Added new namespace: `resist\Matex\Evaluator`  
 + Added proper negative number support: thanks to https://github.com/blazer82/matex/
 + Added custom `MatexException`
 + Bumped required PHP version to 7.4
