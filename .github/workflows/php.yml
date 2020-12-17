@@ -30,7 +30,7 @@ jobs:
 
       - run: composer install --prefer-dist --no-progress --no-suggest --no-dev
 
-      - run: vendor/bin/phpunit
+      - run: phpunit
 
 # Github composer recommendation:
 #name: PHP Composer & Tests
