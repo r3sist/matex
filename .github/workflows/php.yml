@@ -1,6 +1,3 @@
-# Github composer recommendation:
-name: PHP Composer & Tests
-
 on:
   push:
     branches: [ master ]
@@ -8,32 +5,69 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
-
-    runs-on: ubuntu-latest
-
+  run:
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      matrix:
+        operating-system: ['ubuntu-20.04']
+        php-versions: ['7.4', '8.0']
+        phpunit-versions: ['latest']
+    name: Testing PHP ${{ matrix.php-version }} on ${{ matrix.operating-system }}
     steps:
-    - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
 
-    - name: Validate composer.json and composer.lock
-      run: composer validate
+      - name: Setup PHP & Run composer & Run tests
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+#          extensions: mbstring, intl
+          ini-values: post_max_size=256M, max_execution_time=180
+          coverage: none
+          tools: phpunit #composer:v2 installed by default
 
-    - name: Cache Composer packages
-      id: composer-cache
-      uses: actions/cache@v2
-      with:
-        path: vendor
-        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-php-
+      - run: composer validate
 
-    - name: Install dependencies
-      if: steps.composer-cache.outputs.cache-hit != 'true'
-      run: composer install --prefer-dist --no-progress --no-suggest
+      - run: composer install --prefer-dist --no-progress --no-suggest --no-dev
+
+      - run: vendor/bin/phpunit
+
+# Github composer recommendation:
+#name: PHP Composer & Tests
+
+#on:
+#  push:
+#    branches: [ master ]
+#  pull_request:
+#    branches: [ master ]
+
+#jobs:
+#  build:
+#
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#    - uses: actions/checkout@v2
+#
+#    - name: Validate composer.json and composer.lock
+#      run: composer validate
+#
+#    - name: Cache Composer packages
+#      id: composer-cache
+#      uses: actions/cache@v2
+#      with:
+#        path: vendor
+#        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+#        restore-keys: |
+#          ${{ runner.os }}-php-
+#
+#    - name: Install dependencies
+#      if: steps.composer-cache.outputs.cache-hit != 'true'
+#      run: composer install --prefer-dist --no-progress --no-suggest
 
 # Unit tests:
-    - uses: php-actions/phpunit@v1
-      with:
-        configuration: phpunit.xml  
+#    - uses: php-actions/phpunit@v1
+#      with:
+#        configuration: phpunit.xml
 
 
