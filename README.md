@@ -4,13 +4,18 @@ PHP Mathematical expression parser and evaluator
 
 ---
 
+This repository is a fork of original Matex:
+
+https://github.com/madorin/matex  
+Dorin Marcoci - <dorin.marcoci@gmail.com> - <https://www.marcodor.com>
+
+---
+
 ## Installation
 
 `composer require resist/matex`
 
 ## Changelog
-
-Original credits: https://github.com/madorin/matex 
 
 Changes:
 
@@ -22,9 +27,20 @@ Changes:
 + Added unit tests
 + Reformatted code
 
-Original README below:
-
 ---
+
+Original README below:
+# Matex
+
+PHP Mathematical expression parser and evaluator
+
+## Installation
+
+Install the latest version with
+
+```bash
+$ composer require madorin/matex
+```
 
 ## Features
 
@@ -40,21 +56,18 @@ Original README below:
 ## Examples
 
 Basic:
-
 ```php
 $evaluator = new \Matex\Evaluator();
 echo $evaluator->execute('1 + 2');
 ```
 
 String concatenation:
-
 ```php
 $evaluator = new \Matex\Evaluator();
 echo $evaluator->execute('"String" + " " + "concatenation"');
 ```
 
 Variables:
-
 ```php
 $evaluator = new \Matex\Evaluator();
 $evaluator->variables = [
@@ -65,7 +78,6 @@ echo $evaluator->execute('a + b');
 ```
 
 Dynamic variables:
-
 ```php
 public function doVariable($name, &$value) {
     switch ($name) {
@@ -84,9 +96,8 @@ echo $evaluator->execute('a + b');
 ```
 
 Functions:
-
 ```php
-static function sum(...$arguments) {
+static function sum($arguments) {
     $result = 0;
     foreach ($arguments as $argument)
         $result += $argument;
@@ -101,7 +112,6 @@ echo $evaluator->execute('sum(1, 2, 3)');
 ```
 
 Extravaganza:
-
 ```php
 /*
 Dynamic variable resolver
@@ -175,6 +185,10 @@ $evaluator->functions = [
 $evaluator->onFunction = [$this, 'doFunction'];
 echo $evaluator->execute('a + MinAdd(PI * sin(zen), cos(-1.7 / pi)) / bet ^ ((A + 2) * 2) + sum(5, 4, max(6, hit))');
 ```
+
+## Author
+
+Dorin Marcoci - <dorin.marcoci@gmail.com> - <https://www.marcodor.com>
 
 ## License
 
